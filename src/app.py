@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from resume.analyzer import analyze_resume
+from src.resume.analyzer import analyze_resume
 import os
 import re
 import requests
