@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Intelligence | Analysis Report</title>
+
+    <style>
+        /* =====================================================
+           GLOBAL + TYPOGRAPHY
+        ===================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 45%, #0f172a 100%);
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 100vh;
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Soft floating orbs */
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+            opacity: 0.35;
+        }
+
+        body::before {
+            width: 420px;
+            height: 420px;
+            background: #3b82f6;
+            top: -120px;
+            left: -120px;
+        }
+
+        body::after {
+            width: 380px;
+            height: 380px;
+            background: #8b5cf6;
+            bottom: -100px;
+            right: -100px;
+        }
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+        .navbar {
+            min-height: 74px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 8px 22px rgba(59, 130, 246, 0.4);
+        }
+
+        .logo {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+            color: #f8fafc;
+        }
+
+        .logo-subtitle {
+            font-size: 11.5px;
+            color: #94a3b8;
+            margin-top: 2px;
+            font-weight: 450;
+            letter-spacing: 0.2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .nav-title {
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+        }
+
+        /* =====================================================
+           CONTAINER
+        ===================================================== */
+        .container {
+            width: 90%;
+            max-width: 1180px;
+            margin: 34px auto 60px;
+        }
+
+        /* =====================================================
+           WELCOME
+        ===================================================== */
+        .welcome {
+            position: relative;
+            background: rgba(255, 255, 255, 0.055);
+            backdrop-filter: blur(26px);
+            -webkit-backdrop-filter: blur(26px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            padding: 34px 38px;
+            margin-bottom: 28px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        }
+
+        .welcome::after {
+            content: "AI";
+            position: absolute;
+            right: 42px;
+            top: 8px;
+            font-size: 118px;
+            font-weight: 900;
+            color: rgba(59, 130, 246, 0.07);
+            pointer-events: none;
+            letter-spacing: -4px;
+        }
+
+        .welcome-small {
+            color: #94a3b8;
+            font-size: 13.5px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .welcome-small strong {
+            color: #f1f5f9;
+            font-weight: 600;
+        }
+
+        .welcome h1 {
+            font-size: 30px;
+            font-weight: 750;
+            margin-bottom: 10px;
+            color: #f8fafc;
+            letter-spacing: -0.6px;
+            line-height: 1.25;
+        }
+
+        .welcome p {
+            color: #94a3b8;
+            font-size: 14.5px;
+            max-width: 600px;
+            line-height: 1.65;
+            font-weight: 400;
+        }
+
+        /* =====================================================
+           SCORE GRID
+        ===================================================== */
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+            margin-bottom: 28px;
+        }
+
+        .score-card {
+            background: rgba(255, 255, 255, 0.055);
+            backdrop-filter: blur(26px);
+            -webkit-backdrop-filter: blur(26px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            padding: 28px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.35);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .score-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.22);
+        }
+
+        .score-info h3 {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .score-number {
+            font-size: 40px;
+            line-height: 1.1;
+            font-weight: 750;
+            color: #f8fafc;
+            letter-spacing: -1px;
+        }
+
+        .score-label {
+            color: #64748b;
+            font-size: 12.5px;
+            margin-top: 6px;
+            font-weight: 450;
+        }
+
+        /* =====================================================
+           SCORE CIRCLE
+        ===================================================== */
+        .score-circle {
+            width: 98px;
+            height: 98px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #3b82f6 calc(var(--score) * 1%),
+                rgba(255, 255, 255, 0.07) 0
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: 0 0 28px rgba(59, 130, 246, 0.28);
+        }
+
+        .score-circle::before {
+            content: "";
+            position: absolute;
+            width: 78px;
+            height: 78px;
+            background: rgba(15, 23, 42, 0.88);
+            border-radius: 50%;
+        }
+
+        .score-circle span {
+            position: relative;
+            z-index: 1;
+            font-size: 17px;
+            font-weight: 700;
+            color: #60a5fa;
+            letter-spacing: -0.3px;
+        }
+
+        /* =====================================================
+           SCORE BREAKDOWN
+        ===================================================== */
+        .score-breakdown {
+            width: 250px;
+            margin-top: 18px;
+        }
+
+        .score-breakdown div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 450;
+        }
+
+        .score-breakdown strong {
+            color: #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* =====================================================
+           SECTIONS
+        ===================================================== */
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(26px);
+            -webkit-backdrop-filter: blur(26px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 22px;
+            padding: 26px 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title-area {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .blue-icon {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+        }
+
+        .green-icon {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+
+        .orange-icon {
+            background: rgba(249, 115, 22, 0.15);
+            color: #fb923c;
+        }
+
+        .purple-icon {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+        }
+
+        .section-header h2 {
+            font-size: 17.5px;
+            color: #f1f5f9;
+            font-weight: 650;
+            letter-spacing: -0.3px;
+        }
+
+        .section-header span {
+            color: #64748b;
+            font-size: 12.5px;
+            font-weight: 450;
+            margin-top: 2px;
+            display: block;
+        }
+
+        /* =====================================================
+           SKILLS
+        ===================================================== */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill {
+            padding: 7px 15px;
+            border-radius: 50px;
+            font-size: 12.5px;
+            font-weight: 550;
+            border: 1px solid transparent;
+            letter-spacing: 0.15px;
+        }
+
+        .matched {
+            background: rgba(16, 185, 129, 0.14);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.22);
+        }
+
+        .missing {
+            background: rgba(249, 115, 22, 0.14);
+            color: #fb923c;
+            border-color: rgba(249, 115, 22, 0.22);
+        }
+
+        .recommended {
+            background: rgba(59, 130, 246, 0.14);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.22);
+        }
+
+        .skill-count {
+            padding: 5px 13px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid transparent;
+            letter-spacing: 0.2px;
+        }
+
+        .green-count {
+            background: rgba(16, 185, 129, 0.14);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.22);
+        }
+
+        .orange-count {
+            background: rgba(249, 115, 22, 0.14);
+            color: #fb923c;
+            border-color: rgba(249, 115, 22, 0.22);
+        }
+
+        .blue-count {
+            background: rgba(59, 130, 246, 0.14);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.22);
+        }
+
+        /* =====================================================
+           OVERVIEW
+        ===================================================== */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            padding: 20px 22px;
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .info-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(59, 130, 246, 0.14);
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(59, 130, 246, 0.18);
+            font-size: 16px;
+        }
+
+        .info-card h3 {
+            font-size: 14px;
+            color: #f1f5f9;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        .info-card p {
+            font-size: 13.5px;
+            line-height: 1.7;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        /* =====================================================
+           JOBS
+        ===================================================== */
+        .jobs-header-right {
+            background: rgba(59, 130, 246, 0.14);
+            color: #60a5fa;
+            padding: 7px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.22);
+            letter-spacing: 0.2px;
+        }
+
+        .job-card {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            padding: 20px 22px;
+            margin-bottom: 14px;
+            transition: all 0.25s ease;
+        }
+
+        .job-card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.06);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -10px rgba(59, 130, 246, 0.18);
+        }
+
+        .job-top {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr auto;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .job-title {
+            font-size: 15.5px;
+            color: #f1f5f9;
+            margin-bottom: 4px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+        .job-title {
+    font-size: 17px;
+    color: #f8fafc;
+    margin-bottom: 6px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.35;
+}
+
+        .company {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 3px;
+            font-weight: 450;
+        }
+        .company {
+    color: #cbd5e1;
+    font-size: 13.5px;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+        .location {
+            color: #64748b;
+            font-size: 12.5px;
+            font-weight: 400;
+        }
+        .location {
+    color: #94a3b8;
+    font-size: 12.5px;
+    font-weight: 450;
+}
+
+        /* =====================================================
+           MATCH
+        ===================================================== */
+        .job-match-area {
+            min-width: 175px;
+        }
+
+        .match-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.14);
+            color: #34d399;
+            padding: 4px 11px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.22);
+            letter-spacing: 0.2px;
+        }
+
+        .match-bar {
+            width: 100%;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .match-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.45);
+        }
+
+        /* =====================================================
+           JOB SKILLS
+        ===================================================== */
+        .job-skills {
+            margin-top: 14px;
+            color: #64748b;
+            font-size: 12.5px;
+            font-weight: 400;
+        }
+
+        .job-skills strong {
+            color: #94a3b8;
+            font-weight: 550;
+        }
+        .job-skills {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+
+    color: #94a3b8;
+    font-size: 12.5px;
+    font-weight: 400;
+}
+
+.job-skills strong {
+    color: #e2e8f0;
+    font-weight: 600;
+    margin-right: 6px;
+}
+.job-skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.job-skill-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 11px;
+
+    background: rgba(59, 130, 246, 0.10);
+    border: 1px solid rgba(96, 165, 250, 0.22);
+    border-radius: 8px;
+
+    color: #93c5fd;
+    font-size: 12px;
+    font-weight: 550;
+
+    transition: all 0.2s ease;
+}
+
+.job-skill-badge:hover {
+    background: rgba(59, 130, 246, 0.18);
+    border-color: rgba(96, 165, 250, 0.40);
+    transform: translateY(-1px);
+}
+        /* =====================================================
+           APPLY BUTTON
+        ===================================================== */
+        .apply-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 11px;
+            text-decoration: none;
+            font-size: 12.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.32);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            letter-spacing: 0.2px;
+        }
+
+        .apply-btn:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* =====================================================
+           EMPTY
+        ===================================================== */
+        .empty {
+            color: #64748b;
+            font-size: 13.5px;
+            padding: 10px 0;
+            font-weight: 400;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+        footer {
+            text-align: center;
+            padding: 28px;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 450;
+            letter-spacing: 0.3px;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+        @media (max-width: 900px) {
+            .container {
+                width: 92%;
+            }
+
+            .job-top {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .apply-btn {
+                justify-self: start;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                padding: 0 4%;
+            }
+
+            .nav-title {
+                display: none;
+            }
+
+            .container {
+                width: 94%;
+                margin-top: 24px;
+            }
+
+            .welcome {
+                padding: 26px 22px;
+            }
+
+            .welcome h1 {
+                font-size: 25px;
+            }
+
+            .welcome::after {
+                display: none;
+            }
+
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .score-card {
+                padding: 24px;
+            }
+
+            .score-breakdown {
+                width: 100%;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 22px;
+            }
+
+            .section-header {
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .job-top {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .job-match-area {
+                width: 100%;
+            }
+
+            .apply-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 16.5px;
+            }
+
+            .logo-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+            }
+
+            .logo-subtitle {
+                display: none;
+            }
+
+            .welcome h1 {
+                font-size: 22px;
+            }
+
+            .score-number {
+                font-size: 36px;
+            }
+
+            .score-circle {
+                width: 82px;
+                height: 82px;
+            }
+
+            .score-circle::before {
+                width: 66px;
+                height: 66px;
+            }
+
+            .score-circle span {
+                font-size: 15px;
+            }
+
+            .section-header h2 {
+                font-size: 16px;
+            }
+
+            .skill {
+                font-size: 12px;
+                padding: 6px 13px;
+            }
+
+            .job-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo-area">
+            <div class="logo-icon">🤖</div>
+            <div>
+                <div class="logo"><span>AI Resume Intelligence</span></div>
+                <div class="logo-subtitle">Smarter Resume. Better Opportunities.</div>
+            </div>
+        </div>
+
+        <div class="nav-right">
+            <div class="nav-title">📄 Resume Analysis & Job Recommendations</div>
+            <div class="profile-icon">👤</div>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <!-- WELCOME -->
+        <div class="welcome">
+            <div class="welcome-small">👋 Hello, <strong>Resume Candidate</strong></div>
+            <h1>Resume Analysis Report</h1>
+            <p>
+                AI-powered analysis of your resume and personalized
+                job recommendations based on your skills and experience.
+            </p>
+        </div>
+
+        <!-- SCORE CARDS -->
+        <div class="score-grid">
+
+            <!-- RESUME SCORE -->
+            <div class="score-card">
+                <div class="score-info">
+                    <h3>📄 Resume Score</h3>
+                    <div class="score-number">{{ result.resume_percentage }}%</div>
+                    <div class="score-label">Overall resume quality</div>
+
+                    <div class="score-breakdown">
+                        <div>
+                            <span>Skills</span>
+                            <strong>{{ result.skills_score }} / 35</strong>
+                        </div>
+                        <div>
+                            <span>Education</span>
+                            <strong>{{ result.education_score }} / 15</strong>
+                        </div>
+                        <div>
+                            <span>Experience</span>
+                            <strong>{{ result.experience_score }} / 25</strong>
+                        </div>
+                        <div>
+                            <span>Projects</span>
+                            <strong>{{ result.project_score }} / 25</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-circle" style="--score: {{ result.resume_percentage }};">
+                    <span>{{ result.resume_percentage }}%</span>
+                </div>
+            </div>
+
+            <!-- JOB MATCH -->
+            <div class="score-card">
+                <div class="score-info">
+                    <h3>🎯 Job Match</h3>
+                    <div class="score-number">{{ result.job_match_percentage }}%</div>
+                    <div class="score-label">Match with target job</div>
+
+                    <div style="
+                        margin-top: 18px;
+                        background: rgba(59, 130, 246, 0.1);
+                        border: 1px solid rgba(59, 130, 246, 0.18);
+                        border-radius: 12px;
+                        padding: 12px 14px;
+                        color: #94a3b8;
+                        font-size: 12.5px;
+                        line-height: 1.5;
+                    ">
+                        💡 Your resume has been compared with the required job skills.
+                    </div>
+                </div>
+
+                <div class="score-circle" style="--score: {{ result.job_match_percentage }};">
+                    <span>{{ result.job_match_percentage }}%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MATCHED SKILLS -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-title-area">
+                    <div class="section-icon green-icon">✓</div>
+                    <div>
+                        <h2>Matched Skills</h2>
+                        <span>Skills found in your resume</span>
+                    </div>
+                </div>
+                <div class="skill-count green-count">
+                    {{ result.matched_skills|length }} skills
+                </div>
+            </div>
+
+            <div class="skills-container">
+                {% for skill in result.matched_skills %}
+                    <span class="skill matched">✓ {{ skill }}</span>
+                {% else %}
+                    <p class="empty">No matched skills found.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- MISSING SKILLS -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-title-area">
+                    <div class="section-icon orange-icon">+</div>
+                    <div>
+                        <h2>Missing Skills</h2>
+                        <span>Skills required by the job</span>
+                    </div>
+                </div>
+                <div class="skill-count orange-count">
+                    {{ result.missing_skills|length }} skills
+                </div>
+            </div>
+
+            <div class="skills-container">
+                {% for skill in result.missing_skills %}
+                    <span class="skill missing">+ {{ skill }}</span>
+                {% else %}
+                    <p class="empty">No missing skills found.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- RECOMMENDED SKILLS -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-title-area">
+                    <div class="section-icon blue-icon">📚</div>
+                    <div>
+                        <h2>Recommended Skills to Learn</h2>
+                        <span>Improve your job opportunities</span>
+                    </div>
+                </div>
+                <div class="skill-count blue-count">
+                    {{ result.missing_skills|length }} skills
+                </div>
+            </div>
+
+            <div class="skills-container">
+                {% for skill in result.missing_skills %}
+                    <span class="skill recommended">✓ {{ skill }}</span>
+                {% else %}
+                    <p class="empty">Your current skills match the target job.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- RESUME OVERVIEW -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-title-area">
+                    <div class="section-icon purple-icon">📋</div>
+                    <div>
+                        <h2>Resume Overview</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overview-grid">
+                <!-- EDUCATION -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-card-icon">🎓</div>
+                        <h3>Education</h3>
+                    </div>
+                    <p>
+                        {% for edu in result.education %}
+                            {% if edu|lower == "bs" %}
+                                Bachelor of Science (BS)
+                            {% elif edu|lower == "bsc" %}
+                                Bachelor of Science (BSc)
+                            {% elif edu|lower == "ms" %}
+                                Master of Science (MS)
+                            {% elif edu|lower == "msc" %}
+                                Master of Science (MSc)
+                            {% elif edu|lower == "phd" %}
+                                PhD
+                            {% else %}
+                                {{ edu }}
+                            {% endif %}
+                            {% if not loop.last %}<br>{% endif %}
+                        {% else %}
+                            Not detected
+                        {% endfor %}
+                    </p>
+                </div>
+
+                <!-- EXPERIENCE -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-card-icon">💼</div>
+                        <h3>Experience</h3>
+                    </div>
+                    <p>{{ result.experience }}</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- RECOMMENDED JOBS -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-title-area">
+                    <div class="section-icon blue-icon">💼</div>
+                    <div>
+                        <h2>Recommended Jobs</h2>
+                        <span>Top matching opportunities</span>
+                    </div>
+                </div>
+                <div class="jobs-header-right">View Jobs →</div>
+            </div>
+
+            {% if jobs %}
+                {% for job in jobs %}
+                    <div class="job-card">
+                        <div class="job-top">
+                            <div>
+                                <h3 class="job-title">{{ job.title }}</h3>
+                                <p class="company">{{ job.employer_name }}</p>
+                                <p class="location">📍 {{ job.job_location }}</p>
+                            </div>
+
+                            <div class="job-match-area">
+                                <div class="match-badge">{{ job.match_percentage }}% Match</div>
+                                <div class="match-bar">
+                                    <div class="match-fill" style="width: {{ job.match_percentage }}%;"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <a href="{{ job.job_apply_link }}" target="_blank" rel="noopener noreferrer" class="apply-btn">
+                                    Apply Now →
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="job-skills">
+                            <strong>Matched Skills</strong>
+
+                            <div class="job-skill-list">
+                                {% for skill in job.matched_skills %}
+                                <span class="job-skill-badge">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="empty">No recommended jobs found.</p>
+            {% endif %}
+        </section>
+
+    </main>
+
+    <footer>
+        AI Resume Intelligence System · Resume Analysis & Job Recommendation
+    </footer>
+
+</body>
+</html>
