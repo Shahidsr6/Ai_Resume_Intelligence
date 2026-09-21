@@ -3,7 +3,7 @@ from src.resume.analyzer import analyze_resume
 import os
 import re
 import requests
-from job_api import search_jobs
+from src.job_api import search_jobs
 import time
 
 
