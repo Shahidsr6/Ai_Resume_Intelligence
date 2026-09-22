@@ -32,7 +32,7 @@ def home():
             print("Resume Received:", resume.filename)
 
             save_path = os.path.join("resumes", resume.filename)
-
+            os.makedirs("resumes" , exist_ok=True)
             resume.save(save_path)
 
             print("Resume saved:", save_path)
