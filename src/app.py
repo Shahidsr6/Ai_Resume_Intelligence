@@ -59,30 +59,8 @@ def home():
             # MULTIPLE JOB SEARCH
             # =========================
 
-            if result["matched_skills"]:
-
-                skills = result["matched_skills"][:3]
-
-                search_keywords = []
-
-                for skill in skills:
-
-                    search_keywords.append(
-                        skill + " developer"
-                    )
-
-                # General search
-                search_keywords.append(
-                    "web developer"
-                )
-
-            else:
-
-                search_keywords = [
-                    "web developer",
-                    "frontend developer",
-                    "junior web developer"
-                ]
+        
+            search_keywords = ["web developer"]
 
 
             # Remove duplicate search keywords
@@ -158,7 +136,65 @@ def home():
                 )
             }
 
+            # =========================
+# FALLBACK JOBS
+# =========================
 
+            if len(jobs["results"]) == 0:
+
+                jobs["results"] = [
+
+            {
+            "job_title": "Junior Web Developer",
+            "employer_name": "Local Software Company",
+            "job_city": "Pakistan",
+            "job_country": "Pakistan",
+            "job_apply_link": "https://www.rozee.pk/job/jsearch/q/junior%20Web%20Developer/",
+            "job_description": "HTML CSS JavaScript PHP Web Development"
+            },
+
+            {
+            "job_title": "Python Developer",
+            "employer_name": "Software Company",
+            "job_city": "Pakistan",
+            "job_country": "Pakistan",
+            "job_apply_link": "https://www.rozee.pk/job/jsearch/q/Python/",
+            "job_description": "Python Web Development Flask Django"
+            },
+
+            {
+            "job_title": "Frontend Developer",
+            "employer_name": "Web Development Company",
+            "job_city": "Pakistan",
+            "job_country": "Pakistan",
+            "job_apply_link": "https://www.rozee.pk/job/jsearch/q/Frontend/",
+            "job_description": "HTML CSS JavaScript Bootstrap"
+            },
+
+            {
+            "job_title": "PHP Developer",
+            "employer_name": "Web Solutions Company",
+            "job_city": "Pakistan",
+            "job_country": "Pakistan",
+            "job_apply_link": "https://www.rozee.pk/job/jsearch/q/PHP/",
+            "job_description": "PHP HTML CSS JavaScript MySQL"
+            },
+
+            {
+            "job_title": "Web Developer",
+            "employer_name": "IT Company",
+            "job_city": "Pakistan",
+            "job_country": "Pakistan",
+            "job_apply_link": "https://www.rozee.pk/job/jsearch/q/Web/",
+            "job_description": "HTML CSS JavaScript PHP MySQL"
+            }
+
+             ]
+
+            print(
+            "Using fallback jobs:",
+                len(jobs["results"])
+                  )
             print(
                 "Total Unique Jobs:",
                 len(jobs["results"])
